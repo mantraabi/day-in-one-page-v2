@@ -14,25 +14,59 @@ figures — fifteen stories in total, all from the competition brief.
 Everything is drawn with Pillow. There are no photographs, no third-party
 artwork, no logos.
 
+## How the entry is delivered
+
+The poster is rendered at **authoring time** by `tools/gen_poster.py`, a
+Pillow script. Its output is committed at the repository root as `entry.png` —
+that committed file is the entry. The pixels are fixed at authoring time and
+are not produced again when the entry is graded.
+
+At **grading time** `main.py` draws nothing. It reads the committed
+`entry.png`, checks with `struct` that the bytes really are a PNG (signature
+plus IHDR chunk: 1024×1024, 8-bit, valid header CRC, under 1 MiB) and copies
+those exact bytes to `$MAKEFUN_OUTPUT_DIR/entry.png` (default `out/`),
+creating the directory if needed. It imports the Python standard library only.
+
+The split is not stylistic. The grader runs
+
+    python3 -P -s /bot/main.py
+
+with no network and **no third-party packages installed**, so `import PIL`
+there raises ImportError before a pixel is drawn and the run fails outright.
+Pillow stays on the authoring side; the graded entrypoint has no dependencies
+at all.
+
 ## Regenerate
 
 Two steps. The first one touches the network; the second one does not.
 
     python3 tools/prepare_land.py --fetch
-    python3 main.py
 
 `prepare_land.py --fetch` downloads the Natural Earth 1:50m land polygons once,
 simplifies the rings and caches them in `tools/land.json`. After that the
-renderer is fully offline: `tools/gen_poster.py` reads the cache, and `main.py`
-writes `entry.png` into `$MAKEFUN_OUTPUT_DIR` (default `out/`).
+renderer is fully offline: `tools/gen_poster.py` reads the cache.
+
+Then render the poster with the generator (this step needs Pillow):
+
+    python3 -c "import sys; sys.path.insert(0, 'tools'); import gen_poster; gen_poster.build().save('entry.png', format='PNG', optimize=True)"
 
 The render is deterministic — same input, byte-identical output — and draws at
 three times the final size before a single LANCZOS downsample, so the 1px rules
-and the small caps stay crisp.
+and the small caps stay crisp. The committed image is 408845 bytes, sha256
+`1a98573b323cb34429674d32fa202ef0f10db5705fd071ad0c6b534b2808d5d4`.
+
+Finally, deliver it the way the grader does:
+
+    MAKEFUN_OUTPUT_DIR=/output python3 -P -s main.py
+
+That copies the committed bytes to `/output/entry.png` and prints one JSON
+summary line (output path, width, height, bytes, sha256).
 
 ## Requirements
 
-Python 3 and Pillow. Nothing else at render time.
+- Rendering (`tools/gen_poster.py`): Python 3 and Pillow. `prepare_land.py
+  --fetch` additionally needs network, once.
+- Grading (`main.py`): Python 3 standard library only — nothing else.
 
 ## Layout
 
