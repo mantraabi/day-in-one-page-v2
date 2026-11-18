@@ -1,6 +1,8 @@
 # 17 November 2026 — one day, one page
 
-[![built for make.fun](https://make.fun/badge/news-image-20261117.svg)](https://make.fun/c/news-image-20261117?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261117)
+[![make.fun · news-image-20261117](https://make.fun/badge/news-image-20261117.svg)](https://make.fun/bounty/news-image-20261117?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261117)
+[![rank](https://make.fun/badge/news-image-20261117/mantraabi/day-in-one-page-v2/rank.svg)](https://make.fun/bounty/news-image-20261117/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261117)
+[![reward](https://make.fun/badge/news-image-20261117/mantraabi/day-in-one-page-v2/reward.svg)](https://make.fun/bounty/news-image-20261117?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261117)
 
 A single 1024×1024 newspaper front page for 17 November 2026. The lead story
 is the second day of strikes on the bridge over the Kerch Strait, drawn as an
